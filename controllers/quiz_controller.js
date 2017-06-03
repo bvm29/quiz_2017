@@ -210,11 +210,6 @@ function createCont(id, question, answer) {                         //estrucutur
 
 }
 // GET /quizzes/randomplay
-//var score=0;
-// var result=true ;
-// var allQuiz=[] ;
-// var rndmInex ;
-
 exports.randomplay = function(req, res, next) {
 
     var quiz;
@@ -251,7 +246,6 @@ exports.randomplay = function(req, res, next) {
 function randomRender(req, res, next, quiz) {
     var entorno;
     if (req.session.entorno == null) {
-        console.log("randomRender inesperado" + Object.keys(req.cookies));
     } else {
         entorno = req.session.entorno;          // Coger datos de la sesión
     }
@@ -266,14 +260,14 @@ function randomRender(req, res, next, quiz) {
 exports.randomcheck = function(req, res, next) {
 
     if (req.session.entorno == null) {
-        console.log("randomRender inesperado" + Object.keys(req.cookies));
-    } else {
+        entorno = { 'score': 0, 'result': true, 'allQuiz': [], 'rndmInex': 0 };
+} else {
         entorno = req.session.entorno;          // coger datos de sesion || var globales 
     }
 
     var answer = req.query.answer || "";                    // pillar la anser de la query(url)
     entorno.result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
-    entorno.score += entorno.result ? 1 : 0;
+    entorno.score += entorno.result ? 1 : -entorno.score;
     if (entorno.result) {
         entorno.allQuiz.splice(entorno.rndmInex, 1);        // eliminamos quiz 
     }
